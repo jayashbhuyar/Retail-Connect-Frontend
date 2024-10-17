@@ -14,7 +14,7 @@ const ProductList = () => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/products?distributorEmail=${distributorEmail}`
+        `https://retail-connect-backend.onrender.com/api/products?distributorEmail=${distributorEmail}`
       );
       const data = await response.json();
 
@@ -31,7 +31,7 @@ const ProductList = () => {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/products/${productId}`,
+        `https://retail-connect-backend.onrender.com/api/products/${productId}`,
         {
           method: "DELETE",
         }
@@ -56,7 +56,7 @@ const ProductList = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:8000/api/products/${editingProduct._id}`,
+        `https://retail-connect-backend.onrender.com/api/products/${editingProduct._id}`,
         {
           method: "PUT",
           headers: {

@@ -46,7 +46,7 @@ const InvoicePage = () => {
       }
 
       const response = await fetch(
-        `http://localhost:8000/api/invoices/email?email=${encodeURIComponent(userEmail)}`
+        `https://retail-connect-backend.onrender.com/api/invoices/email?email=${encodeURIComponent(userEmail)}`
       );
 
       if (!response.ok) {

@@ -26,7 +26,7 @@
 
 //       try {
 //         const response = await axios.get(
-//           `http://localhost:8000/api/orders/pending?distributorEmail=${distributorEmail}`
+//           `https://retail-connect-backend.onrender.com/api/orders/pending?distributorEmail=${distributorEmail}`
 //         );
 
 //         if (response.data && response.data.length > 0) {
@@ -60,7 +60,7 @@
 //   //   }
 
 //   //   try {
-//   //     await axios.patch(`http://localhost:8000/api/orders/status/${currentOrder._id}`, {
+//   //     await axios.patch(`https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`, {
 //   //       status: "accepted",
 //   //       deliveryBefore: deliveryDate.toISOString(),
 //   //     });
@@ -88,7 +88,7 @@
 //   //   }
 
 //   //   try {
-//   //     await axios.patch(`http://localhost:8000/api/orders/status/${currentOrder._id}`, {
+//   //     await axios.patch(`https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`, {
 //   //       status: "rejected",
 //   //       orderCancelReason: rejectionReason,
 //   //     });
@@ -112,7 +112,7 @@
 
 //   //   try {
 //   //     // Reject the order first
-//   //     await axios.patch(`http://localhost:8000/api/orders/status/${currentOrder._id}`, {
+//   //     await axios.patch(`https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`, {
 //   //       status: "rejected",
 //   //       orderCancelReason: rejectionReason,
 //   //     });
@@ -121,7 +121,7 @@
 //   //     // const objectId = new ObjectId(productId);
 //   //     console.log(productId)
 //   //     const { productId, quantity } = currentOrder; // Get productId and quantity from the current order
-//   //     await axios.patch(`http://localhost:8000/api/products/update-stock/${productId}`, {
+//   //     await axios.patch(`https://retail-connect-backend.onrender.com/api/products/update-stock/${productId}`, {
 //   //       increment: quantity, // Send quantity to be added back to stock
 //   //     });
 
@@ -145,7 +145,7 @@
 //     try {
 //       // Step 1: Update order status to 'accepted'
 //       await axios.patch(
-//         `http://localhost:8000/api/orders/status/${currentOrder._id}`,
+//         `https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`,
 //         {
 //           status: "accepted",
 //           deliveryBefore: deliveryDate.toISOString(),
@@ -154,12 +154,12 @@
 
 //       // Step 2: Fetch the product details from the Product model
 //       const productResponse = await axios.get(
-//         `http://localhost:8000/api/products/${currentOrder.productId}`
+//         `https://retail-connect-backend.onrender.com/api/products/${currentOrder.productId}`
 //       );
 //       const productData = productResponse.data;
 
 //       const orderresponse = await axios.get(
-//         `http://localhost:8000/api/orders/getdata/${currentOrder._id}`
+//         `https://retail-connect-backend.onrender.com/api/orders/getdata/${currentOrder._id}`
 //       );
 
 //       const orderData = orderresponse.data;
@@ -196,7 +196,7 @@
 //       };
       
 //       // Send the invoice data to the API
-//       await axios.post("http://localhost:8000/api/invoices", invoiceData);
+//       await axios.post("https://retail-connect-backend.onrender.com/api/invoices", invoiceData);
       
       
     
@@ -231,7 +231,7 @@
 //     try {
 //       // Reject the order first
 //       await axios.patch(
-//         `http://localhost:8000/api/orders/status/${currentOrder._id}`,
+//         `https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`,
 //         {
 //           status: "rejected",
 //           orderCancelReason: rejectionReason,
@@ -243,7 +243,7 @@
 
 //       // Update the stock in the Product model
 //       await axios.patch(
-//         `http://localhost:8000/api/products/update-stock/${productId}`,
+//         `https://retail-connect-backend.onrender.com/api/products/update-stock/${productId}`,
 //         {
 //           increment: quantity, // Send quantity to be added back to stock
 //         }
@@ -415,7 +415,7 @@ const Pending = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/pending?distributorEmail=${distributorEmail}`
+          `https://retail-connect-backend.onrender.com/api/orders/pending?distributorEmail=${distributorEmail}`
         );
 
         if (response.data && response.data.length > 0) {
@@ -457,7 +457,7 @@ const Pending = () => {
     try {
       // Step 1: Update order status to 'accepted'
       await axios.patch(
-        `http://localhost:8000/api/orders/status/${currentOrder._id}`,
+        `https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`,
         {
           status: "accepted",
           deliveryBefore: deliveryDate.toISOString(),
@@ -466,12 +466,12 @@ const Pending = () => {
 
       // Step 2: Fetch the product details from the Product model
       const productResponse = await axios.get(
-        `http://localhost:8000/api/products/${currentOrder.productId}`
+        `https://retail-connect-backend.onrender.com/api/products/${currentOrder.productId}`
       );
       const productData = productResponse.data;
 
       const orderresponse = await axios.get(
-        `http://localhost:8000/api/orders/getdata/${currentOrder._id}`
+        `https://retail-connect-backend.onrender.com/api/orders/getdata/${currentOrder._id}`
       );
 
       const orderData = orderresponse.data;
@@ -509,7 +509,7 @@ const Pending = () => {
       };
       
       // Send the invoice data to the API
-      await axios.post("http://localhost:8000/api/invoices", invoiceData);
+      await axios.post("https://retail-connect-backend.onrender.com/api/invoices", invoiceData);
 
       // Step 6: Remove the accepted order from the list
       setOrders((prevOrders) =>
@@ -542,7 +542,7 @@ const Pending = () => {
     try {
       // Reject the order first
       await axios.patch(
-        `http://localhost:8000/api/orders/status/${currentOrder._id}`,
+        `https://retail-connect-backend.onrender.com/api/orders/status/${currentOrder._id}`,
         {
           status: "rejected",
           orderCancelReason: rejectionReason,
@@ -554,7 +554,7 @@ const Pending = () => {
 
       // Update the stock in the Product model
       await axios.patch(
-        `http://localhost:8000/api/products/update-stock/${productId}`,
+        `https://retail-connect-backend.onrender.com/api/products/update-stock/${productId}`,
         {
           increment: quantity, // Send quantity to be added back to stock
         }

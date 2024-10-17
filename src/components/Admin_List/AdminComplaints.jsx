@@ -22,7 +22,7 @@ const AdminComplaints = () => {
 
   const fetchFeedback = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/feedback");
+      const response = await fetch("https://retail-connect-backend.onrender.com/api/feedback");
       if (!response.ok) {
         throw new Error('Failed to fetch feedback');
       }

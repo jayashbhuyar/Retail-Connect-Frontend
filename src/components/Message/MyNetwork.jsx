@@ -14,7 +14,7 @@ const MyNetwork = () => {
       console.log("Fetching accepted requests for email:", userEmail); // Log the email being used
       try {
         const response = await fetch(
-          `http://localhost:8000/api/network/accepted?email=${userEmail}` // Fetch accepted requests
+          `https://retail-connect-backend.onrender.com/api/network/accepted?email=${userEmail}` // Fetch accepted requests
         );
         const data = await response.json();
         if (response.ok) {
@@ -33,7 +33,7 @@ const MyNetwork = () => {
   const handleReject = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/network/reject/status/${id}`, // Update the status of the request
+        `https://retail-connect-backend.onrender.com/api/network/reject/status/${id}`, // Update the status of the request
         {
           method: "PUT",
           headers: {

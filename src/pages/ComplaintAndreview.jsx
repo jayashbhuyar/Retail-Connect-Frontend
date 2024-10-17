@@ -55,7 +55,7 @@ const ComplaintAndReviewPage = () => {
     // console.log("Submitting feedback data:", feedbackData);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/feedback', feedbackData);
+      const response = await axios.post('https://retail-connect-backend.onrender.com/api/feedback', feedbackData);
     //   console.log("Feedback submitted successfully:", response.data);
       // Reset the form
       setComplaint('');

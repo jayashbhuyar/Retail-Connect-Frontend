@@ -50,7 +50,7 @@ const RetailersList = () => {
     const fetchRetailers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/users/retailers"
+          "https://retail-connect-backend.onrender.com/api/users/retailers"
         );
         const data = await response.json();
         if (response.ok) {

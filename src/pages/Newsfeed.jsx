@@ -14,7 +14,7 @@ const NewsFeed = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get('http://localhost:8000/api/news/top-headlines');
+        const response = await axios.get('https://retail-connect-backend.onrender.com/api/news/top-headlines');
         
         console.log('API Response:', response.data); // Debug log
 

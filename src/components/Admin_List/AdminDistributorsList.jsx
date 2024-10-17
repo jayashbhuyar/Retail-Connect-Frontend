@@ -11,7 +11,7 @@ const AdminDistributorsList = () => {
     const fetchDistributors = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/users/distributors");
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/users/distributors");
         const data = await response.json();
         if (response.ok) {
           setDistributors(data);
@@ -34,7 +34,7 @@ const AdminDistributorsList = () => {
     const userEmail = JSON.parse(localStorage.getItem("userdata"))?.email; // Get user email from local storage
 
     try {
-      const response = await fetch(`http://localhost:8000/api/network/add`, {
+      const response = await fetch(`https://retail-connect-backend.onrender.com/api/network/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const AdminDistributorsList = () => {
   const handleRemoveDistributor = async (distributorId) => {
     if (window.confirm("Are you sure you want to remove this distributor?")) {
       try {
-        const response = await fetch(`http://localhost:8000/api/users/distributors/${distributorId}`, {
+        const response = await fetch(`https://retail-connect-backend.onrender.com/api/users/distributors/${distributorId}`, {
           method: "DELETE",
         });
         if (response.ok) {

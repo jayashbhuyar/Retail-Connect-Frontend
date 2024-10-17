@@ -8,7 +8,7 @@ const LatestProducts = () => {
   useEffect(() => {
     const fetchLatestProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/products/all"); // Adjust the endpoint as necessary
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/products/all"); // Adjust the endpoint as necessary
         const data = await response.json();
         if (response.ok) {
           // Sort products by createdAt date in descending order

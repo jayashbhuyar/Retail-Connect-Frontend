@@ -30,7 +30,7 @@ const ProductListAll = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/products/all");
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/products/all");
         const data = await response.json();
         if (response.ok) {
           setProducts(data);
@@ -81,7 +81,7 @@ const ProductListAll = () => {
 
   const handleMoreInfo = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/products/${productId}`);
+      const response = await fetch(`https://retail-connect-backend.onrender.com/api/products/${productId}`);
       const data = await response.json();
       if (response.ok) {
         setSelectedProduct(data);

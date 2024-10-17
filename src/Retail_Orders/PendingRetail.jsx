@@ -13,7 +13,7 @@ const PendingRetailer = () => {
     const fetchPendingOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/pending-by-email?userEmail=${userEmail}`
+          `https://retail-connect-backend.onrender.com/api/orders/pending-by-email?userEmail=${userEmail}`
         );
         setPendingOrders(response.data);
       } catch (err) {
@@ -35,7 +35,7 @@ const PendingRetailer = () => {
   //     const message = `Cancelled by Retailer. Reason: ${reason}`;
   //     try {
   //       await axios.patch(
-  //         `http://localhost:8000/api/orders/retail/status/${orderId}`,
+  //         `https://retail-connect-backend.onrender.com/api/orders/retail/status/${orderId}`,
   //         {
   //           status: "cancelled",
   //           msg: message,
@@ -58,7 +58,7 @@ const PendingRetailer = () => {
   
       try {
         // Cancel the order and retrieve the updated order details
-        const response = await axios.patch(`http://localhost:8000/api/orders/retail/status/${orderId}`, {
+        const response = await axios.patch(`https://retail-connect-backend.onrender.com/api/orders/retail/status/${orderId}`, {
           status: "cancelled",
           msg: message,
         });
@@ -66,7 +66,7 @@ const PendingRetailer = () => {
         const { productId, quantity } = response.data; // Extract productId and quantity from the updated order
   
         // Update the stock of the product using the productId and quantity
-        await axios.patch(`http://localhost:8000/api/products/update-stock/${productId}`, {
+        await axios.patch(`https://retail-connect-backend.onrender.com/api/products/update-stock/${productId}`, {
           increment: quantity, // Increment stock by the order quantity
         });
   
@@ -86,7 +86,7 @@ const PendingRetailer = () => {
     if (newMessage) {
       try {
         await axios.patch(
-          `http://localhost:8000/api/orders/retail/msg/${orderId}`,
+          `https://retail-connect-backend.onrender.com/api/orders/retail/msg/${orderId}`,
           {
             msg: newMessage,
           }

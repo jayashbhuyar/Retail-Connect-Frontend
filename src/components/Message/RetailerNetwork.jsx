@@ -20,7 +20,7 @@ const RetailerNetwork = () => {
       console.log("Fetching accepted requests for email:", userEmail);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/network/accepted/retailer?email=${userEmail}`
+          `https://retail-connect-backend.onrender.com/api/network/accepted/retailer?email=${userEmail}`
         );
         const data = await response.json();
         if (response.ok) {
@@ -38,7 +38,7 @@ const RetailerNetwork = () => {
 
   const handleMoreInfo = async (request) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/users/data/${request.distributorEmail}`);
+      const response = await fetch(`https://retail-connect-backend.onrender.com/api/users/data/${request.distributorEmail}`);
       const distributorData = await response.json();
       if (response.ok) {
         setSelectedDistributor(distributorData);

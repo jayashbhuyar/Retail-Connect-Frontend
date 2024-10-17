@@ -18,7 +18,7 @@ const Rejected = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/rejected?distributorEmail=${distributorEmail}`
+          `https://retail-connect-backend.onrender.com/api/orders/rejected?distributorEmail=${distributorEmail}`
         );
 
         if (response.data && response.data.length > 0) {
@@ -38,7 +38,7 @@ const Rejected = () => {
   // Function to handle the deletion of an order
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/orders/status/${orderId}`);
+      await axios.delete(`https://retail-connect-backend.onrender.com/api/orders/status/${orderId}`);
       // Remove the deleted order from the state
       setRejectedOrders((prevOrders) =>
         prevOrders.filter((order) => order._id !== orderId)
