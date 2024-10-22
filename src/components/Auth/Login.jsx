@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
+import Cookies from "js-cookie"; // Import the js-cookie library
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,6 +8,46 @@ const Login = () => {
   const [role, setRole] = useState("retailer"); // Default role
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  
+  useEffect(() => {
+    
+      const validateToken = async () => {
+        try {
+          const response = await fetch("http://localhost:8000/api/validate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body:"asdjfsajdlgkjaslkg",
+            credentials: "include",
+          });
+          console.log(response)
+          const data = await response.json();
+
+          if (response.ok) {
+            // Token is valid, redirect based on user role
+            console.log(JSON.parse(localStorage.getItem('userdata')))
+            if (JSON.parse(localStorage.getItem('userdata')).role === "distributor") {
+              window.location.href = "/homepage"; // Redirect to distributor dashboard
+            } else if (JSON.parse(localStorage.getItem('userdata')).role === "retailer") {
+              window.location.href = "/homepageretailer"; // Redirect to retailer dashboard
+            } else if (JSON.parse(localStorage.getItem('userdata')).role === "admin") {
+              window.location.href = "/adminhome"; // Redirect to admin dashboard
+            }
+          } else {
+            Cookies.remove("token");
+
+            // If token is invalid, remove it
+          }
+        } catch (error) {
+          console.error("Token validation failed:", error);
+        }
+      };
+
+      validateToken();
+    
+  }, []); // Empty dependency array means this runs only once after the component mounts
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,29 +57,37 @@ const Login = () => {
     const loginData = { email, password, role };
 
     try {
-      const response = await fetch("https://retail-connect-backend.onrender.com/api/auth/login", {
+      const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
+        credentials: "include", // This ensures cookies are included with requests
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         setSuccess(data.message);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userdata", JSON.stringify(data.user));
+
+        // Set the token as a cookie
+        Cookies.set("token", data.token, {
+          expires: 1 / 24.0,
+          // secure: true,
+          sameSite: "strict",
+        });
+        localStorage.setItem('userdata', JSON.stringify(data.user));
+        // 1-hour expiry, sent over HTTPS, and protects against CSRF attacks.
 
         // Redirect based on user role
         if (data.user.role === "distributor") {
           window.location.href = "/homepage"; // Redirect to distributor dashboard
         } else if (data.user.role === "retailer") {
           window.location.href = "/homepageretailer"; // Redirect to retailer dashboard
-        }
-        else if (data.user.role === "admin") {
-          window.location.href = "/adminhome"; // Redirect to retailer dashboard
+        } else if (data.user.role === "admin") {
+          window.location.href = "/adminhome"; // Redirect to admin dashboard
         }
       } else {
         setError(data.message);

@@ -14,7 +14,10 @@ const ProductList = () => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        `https://retail-connect-backend.onrender.com/api/products?distributorEmail=${distributorEmail}`
+        `http://localhost:8000/api/products?distributorEmail=${distributorEmail}`, {
+          method: "GET", // Specify the request method if needed (GET is default)
+          credentials: "include", // Include credentials with the request
+        }
       );
       const data = await response.json();
 
@@ -31,10 +34,12 @@ const ProductList = () => {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `https://retail-connect-backend.onrender.com/api/products/${productId}`,
+        `http://localhost:8000/api/products/${productId}`,
         {
           method: "DELETE",
+          credentials: "include", // Include credentials with the request
         }
+      
       );
 
       if (response.ok) {
@@ -56,13 +61,15 @@ const ProductList = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `https://retail-connect-backend.onrender.com/api/products/${editingProduct._id}`,
+        `http://localhost:8000/api/products/${editingProduct._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(editingProduct),
+          credentials: "include", // Include credentials with the request
+         
         }
       );
 

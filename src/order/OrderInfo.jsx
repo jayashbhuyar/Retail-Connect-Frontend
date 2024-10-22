@@ -16,7 +16,10 @@ const OrderInfo = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await fetch(
-        `https://retail-connect-backend.onrender.com/api/products/${productId}`
+        `http://localhost:8000/api/products/${productId}`, {
+          method: "GET", // Specify the request method if needed (GET is default)
+          credentials: "include", // Include credentials with the request
+        }
       );
       const data = await response.json();
       setProduct(data);
@@ -25,7 +28,10 @@ const OrderInfo = () => {
     const fetchDistributorInfo = async () => {
       try {
         const response = await fetch(
-          `https://retail-connect-backend.onrender.com/api/products/${productId}/distributor`
+          `http://localhost:8000/api/products/${productId}/distributor`, {
+            method: "GET", // Specify the request method if needed (GET is default)
+            credentials: "include", // Include credentials with the request
+          }
         );
        
         if (!response.ok) {
@@ -98,12 +104,14 @@ const OrderInfo = () => {
     };
 
     try {
-      const response = await fetch('https://retail-connect-backend.onrender.com/api/orders/place', {
+      const response = await fetch('http://localhost:8000/api/orders/place', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include", // Include credentials with the request
         body: JSON.stringify(orderData),
+        
       });
 
       if (response.ok) {
@@ -129,11 +137,12 @@ const OrderInfo = () => {
 
   const updateDistributorStock = async (distributorEmail1, productId, quantity) => {
     try {
-      const response = await fetch('https://retail-connect-backend.onrender.com/api/products/update-stock', {
+      const response = await fetch('http://localhost:8000/api/products/update-stock', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials:"include",
         body: JSON.stringify({
           distributorEmail1,
           productId,

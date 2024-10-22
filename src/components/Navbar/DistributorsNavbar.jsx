@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { useState, useEffect } from "react";
 import {
   Bars3Icon,
@@ -28,6 +29,28 @@ const DistributorsNavbar = () => {
   const toggleProductDropdown = () => setIsProductDropdownOpen(!isProductDropdownOpen);
   const toggleMobileProductDropdown = () => setIsMobileProductDropdownOpen(!isMobileProductDropdownOpen);
   const toggleOrdersDropdown = () => setIsOrdersDropdownOpen(!isOrdersDropdownOpen);
+
+
+const handleLogout = async () => {
+  try {
+    // Optionally, notify the server to invalidate the token (if token invalidation is needed)
+    await fetch('http://localhost:8000/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include', // Include credentials (cookies) in the request
+    });
+
+    // Remove the JWT token from the cookies
+    Cookies.remove('token', { sameSite: 'strict' });
+    localStorage.removeItem('userdata');
+
+    // Redirect to login page
+    window.location.href = '/auth/login';
+  } catch (error) {
+    console.error("Error during logout:", error);
+    // Optionally, show an error notification to the user
+  }
+};
+
 
   return (
     <nav className="bg-gray-900 shadow-lg">
@@ -159,11 +182,7 @@ const DistributorsNavbar = () => {
                          {userData && userData.role} 
                   </Link>
                     <button
-                      onClick={() => {
-                        localStorage.removeItem("userdata");
-                        localStorage.removeItem("token");
-                        window.location.href = "/auth/login";
-                      }}
+                      onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Sign out

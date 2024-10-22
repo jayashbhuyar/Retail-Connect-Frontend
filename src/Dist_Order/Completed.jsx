@@ -18,11 +18,15 @@ const Completed = () => {
       }
 
       try {
-        const response = await axios.get(`https://retail-connect-backend.onrender.com/api/orders/completed`, {
-          params: {
-            distributorEmail,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:8000/api/orders/completed`,
+          {
+            params: {
+              distributorEmail, // Include any query parameters needed
+            },
+            withCredentials: true, // Include credentials (cookies) with the request
+          }
+        );
         setCompletedOrders(response.data);
       } catch (error) {
         console.error("Error fetching completed orders:", error);

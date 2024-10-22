@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import Cookies from 'js-cookie';
+
 
 const RetailerNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,10 +39,24 @@ const RetailerNavbar = () => {
   const toggleOrdersDropdown = () => setIsOrdersDropdownOpen(!isOrdersDropdownOpen);
   const toggleMobileOrdersDropdown = () => setIsMobileOrdersDropdownOpen(!isMobileOrdersDropdownOpen);
 
-  const handleLogout = () => {
-    localStorage.removeItem("userdata");
-    localStorage.removeItem("token");
-    window.location.href = "/auth/login";
+  const handleLogout = async () => {
+    try {
+      // Optionally, notify the server to invalidate the token (if token invalidation is needed)
+      await fetch('http://localhost:8000/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include', // Include credentials (cookies) in the request
+      });
+  
+      // Remove the JWT token from the cookies
+      Cookies.remove('token', { secure: true, sameSite: 'strict' });
+      localStorage.removeItem('userdata');
+  
+      // Redirect to login page
+      window.location.href = '/auth/login';
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Optionally, show an error notification to the user
+    }
   };
 
   return (

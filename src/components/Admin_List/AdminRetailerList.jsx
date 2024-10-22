@@ -11,7 +11,10 @@ const AdminRetailerList = () => {
     const fetchRetailers = async () => {
       try {
         const response = await fetch(
-          "https://retail-connect-backend.onrender.com/api/users/retailers"
+          "http://localhost:8000/api/users/retailers", {
+            method: "GET", // Specify the request method if needed (GET is default)
+            credentials: "include", // Include credentials with the request
+          }
         );
         const data = await response.json();
         if (response.ok) {
@@ -39,8 +42,10 @@ const AdminRetailerList = () => {
     if (window.confirm("Are you sure you want to delete this retailer?")) {
       try {
         const response = await fetch(
-          `https://retail-connect-backend.onrender.com/api/users/retailers/${retailerId}`,
-          { method: "DELETE" }
+          `http://localhost:8000/api/users/retailers/${retailerId}`,
+          { method: "DELETE" ,
+            credentials:"include"
+          }
         );
         if (response.ok) {
           // Remove the retailer from the state after successful deletion

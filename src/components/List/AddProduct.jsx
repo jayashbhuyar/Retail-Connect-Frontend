@@ -48,12 +48,14 @@ const AddProduct = () => {
     };
 
     try {
-      const response = await fetch("https://retail-connect-backend.onrender.com/api/products/add", {
+      const response = await fetch("http://localhost:8000/api/products/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(productData),
+        credentials: "include", // Include credentials with the request
+       
       });
 
       const data = await response.json();

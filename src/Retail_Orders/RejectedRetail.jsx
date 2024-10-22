@@ -15,7 +15,9 @@ const RejectedRetail = () => {
     const fetchRejectedOrders = async () => {
       try {
         const response = await axios.get(
-          `https://retail-connect-backend.onrender.com/api/orders/rejected-by-email?userEmail=${userEmail}`
+          `http://localhost:8000/api/orders/rejected-by-email?userEmail=${userEmail}`,{
+            withCredentials:true
+          }
         );
         setRejectedOrders(response.data);
       } catch (err) {
@@ -32,7 +34,9 @@ const RejectedRetail = () => {
 
   const handleRemoveOrder = async (orderId) => {
     try {
-      await axios.delete(`https://retail-connect-backend.onrender.com/api/orders/delete-rejected/${orderId}`);
+      await axios.delete(`http://localhost:8000/api/orders/delete-rejected/${orderId}`,{
+        withCredentials:true
+      });
       setRejectedOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
     } catch (err) {
       setError("Failed to remove the order. Please try again.");

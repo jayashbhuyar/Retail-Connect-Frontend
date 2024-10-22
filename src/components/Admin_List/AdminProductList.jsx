@@ -10,7 +10,10 @@ const AdminProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://retail-connect-backend.onrender.com/api/products/all"); // Adjust endpoint if needed
+        const response = await fetch("http://localhost:8000/api/products/all", {
+          method: "GET", // Specify the request method if needed (GET is default)
+          credentials: "include", // Include credentials with the request
+        }); // Adjust endpoint if needed
         const data = await response.json();
         if (response.ok) {
           setProducts(data);

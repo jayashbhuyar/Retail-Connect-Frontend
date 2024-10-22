@@ -28,20 +28,22 @@ const Accepted = () => {
         return;
       }
 
-      try {
-        const response = await axios.get(
-          `https://retail-connect-backend.onrender.com/api/orders/accepted`,
-          {
-            params: {
-              distributorEmail,
-            },
-          }
-        );
-        setAcceptedOrders(response.data);
-        if (!(response.data && response.data.length > 0)) {
-          setError("No Accepted Orders found.");
-        }
-      } catch (error) {
+     try {
+  const response = await axios.get(
+    `http://localhost:8000/api/orders/accepted`,
+    {
+      params: {
+        distributorEmail,
+      },
+      withCredentials: true, // Include credentials (cookies) with the request
+    }
+  );
+
+  setAcceptedOrders(response.data);
+  if (!(response.data && response.data.length > 0)) {
+    setError("No Accepted Orders found.");
+  }
+} catch (error) {
         console.error("Error fetching accepted orders:", error);
         setError("Failed to fetch accepted orders.");
       }
@@ -53,8 +55,13 @@ const Accepted = () => {
   const handleCompleteOrder = async (orderId) => {
     try {
       const response = await axios.put(
-        `https://retail-connect-backend.onrender.com/api/orders/${orderId}/status`
+        `http://localhost:8000/api/orders/${orderId}/status`, // URL
+        { /* Include any data you want to send in the body of the PUT request */ },
+        {
+          withCredentials: true, // Include credentials (cookies) with the request
+        }
       );
+    
       const updatedOrder = response.data;
 
       setAcceptedOrders((prevOrders) =>

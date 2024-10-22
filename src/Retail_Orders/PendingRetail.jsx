@@ -13,7 +13,10 @@ const PendingRetailer = () => {
     const fetchPendingOrders = async () => {
       try {
         const response = await axios.get(
-          `https://retail-connect-backend.onrender.com/api/orders/pending-by-email?userEmail=${userEmail}`
+          `http://localhost:8000/api/orders/pending-by-email?userEmail=${userEmail}`,
+          {
+            withCredentials:true
+          }
         );
         setPendingOrders(response.data);
       } catch (err) {
@@ -35,7 +38,7 @@ const PendingRetailer = () => {
   //     const message = `Cancelled by Retailer. Reason: ${reason}`;
   //     try {
   //       await axios.patch(
-  //         `https://retail-connect-backend.onrender.com/api/orders/retail/status/${orderId}`,
+  //         `http://localhost:8000/api/orders/retail/status/${orderId}`,
   //         {
   //           status: "cancelled",
   //           msg: message,
@@ -58,17 +61,29 @@ const PendingRetailer = () => {
   
       try {
         // Cancel the order and retrieve the updated order details
-        const response = await axios.patch(`https://retail-connect-backend.onrender.com/api/orders/retail/status/${orderId}`, {
-          status: "cancelled",
-          msg: message,
-        });
-  
+        const response = await axios.patch(
+          `http://localhost:8000/api/orders/retail/status/${orderId}`,
+          {
+            status: "cancelled",
+            msg: message,
+          },
+          {
+            withCredentials: true, // Include credentials (cookies) with the request
+          }
+        );
         const { productId, quantity } = response.data; // Extract productId and quantity from the updated order
   
         // Update the stock of the product using the productId and quantity
-        await axios.patch(`https://retail-connect-backend.onrender.com/api/products/update-stock/${productId}`, {
-          increment: quantity, // Increment stock by the order quantity
-        });
+        await axios.patch(
+          `http://localhost:8000/api/products/update-stock/${productId}`,
+          {
+            increment: quantity, // Increment stock by the order quantity
+          },
+          {
+            withCredentials: true, // Include credentials (cookies) with the request
+          }
+        );
+        
   
         // Update the local state by removing the cancelled order from the list
         setPendingOrders(pendingOrders.filter((order) => order._id !== orderId));
@@ -86,9 +101,12 @@ const PendingRetailer = () => {
     if (newMessage) {
       try {
         await axios.patch(
-          `https://retail-connect-backend.onrender.com/api/orders/retail/msg/${orderId}`,
+          `http://localhost:8000/api/orders/retail/msg/${orderId}`,
           {
             msg: newMessage,
+          },
+          {
+            withCredentials: true, // Include credentials (cookies) with the request
           }
         );
         const updatedOrders = pendingOrders.map((order) =>

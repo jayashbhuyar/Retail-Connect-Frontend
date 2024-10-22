@@ -5,7 +5,6 @@ import {
   Route,
   Routes,
   Navigate,
-  BrowserRouter,
 } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
@@ -49,7 +48,7 @@ import DistributorProducts from "./components/List/DistributorProducts";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/signup" element={<Signup />} />
@@ -96,7 +95,7 @@ const App = () => {
 
         
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 

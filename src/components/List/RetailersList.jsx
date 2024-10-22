@@ -2,34 +2,30 @@ import React, { useEffect, useState } from "react";
 import DistributorsNavbar from "../Navbar/DistributorsNavbar";
 
 const RetailerCard = ({ retailer, onMoreInfoClick, onContactDetailsClick }) => {
-  const defaultImage = "path/to/default/image.jpg"; // Replace with an actual path to a default image
+  const defaultImage = "path/to/default/image.jpg";
 
   return (
-    <div className="bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col transition-transform transform hover:scale-100">
-      <img
-        src={retailer.image || defaultImage} // Use default image if retailer.image is not available
-        alt={retailer.name}
-        className="h-48 w-full object-cover rounded-t-lg mb-4"
-        style={{ objectFit: "cover" }} // Ensure the image covers the space properly
-      />
-      <div className="px-4">
-        <h3 className="text-lg font-bold text-purple-400">{retailer.name}</h3>
-        <p className="text-gray-300">Shop Name: {retailer.shopName}</p>
-        <p className="text-gray-300">Email: {retailer.email}</p>
-        <p className="text-gray-300">Phone: {retailer.phone}</p>
-        <p className="text-gray-300">
-          Created At: {new Date(retailer.createdAt).toLocaleDateString()}
-        </p>
+    <div className="bg-gray-800 shadow-lg rounded-lg p-4 mb-4 flex items-center justify-between transition-all hover:bg-gray-700">
+      <div className="flex items-center space-x-4">
+        <img
+          src={retailer.image || defaultImage}
+          alt={retailer.name}
+          className="h-12 w-12 rounded-full object-cover"
+        />
+        <div>
+          <h3 className="text-lg font-bold text-purple-400">{retailer.name}</h3>
+          <p className="text-gray-300">Shop Name: {retailer.shopName}</p>
+        </div>
       </div>
-      <div className="mt-auto flex space-x-2 p-4">
+      <div className="flex space-x-2">
         <button
-          onClick={() => onMoreInfoClick(retailer)} // Pass retailer data to the click handler
+          onClick={() => onMoreInfoClick(retailer)}
           className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition duration-200"
         >
           More Info
         </button>
         <button
-          onClick={() => onContactDetailsClick(retailer)} // Pass retailer data to the click handler
+          onClick={() => onContactDetailsClick(retailer)}
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-200"
         >
           Contact Details
@@ -43,14 +39,17 @@ const RetailersList = () => {
   const [retailers, setRetailers] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedRetailer, setSelectedRetailer] = useState(null); // State to hold selected retailer for modal
-  const [showContactDetails, setShowContactDetails] = useState(false); // State to control contact details modal
+  const [selectedRetailer, setSelectedRetailer] = useState(null);
+  const [showContactDetails, setShowContactDetails] = useState(false);
 
   useEffect(() => {
     const fetchRetailers = async () => {
       try {
         const response = await fetch(
-          "https://retail-connect-backend.onrender.com/api/users/retailers"
+          "http://localhost:8000/api/users/retailers", {
+            method: "GET", // Specify the request method if needed (GET is default)
+            credentials: "include", // Include credentials with the request
+          }
         );
         const data = await response.json();
         if (response.ok) {
@@ -75,24 +74,24 @@ const RetailersList = () => {
   };
 
   const handleMoreInfoClick = (retailer) => {
-    setSelectedRetailer(retailer); // Set the selected retailer for the modal
+    setSelectedRetailer(retailer);
   };
 
   const handleContactDetailsClick = (retailer) => {
-    setSelectedRetailer(retailer); // Set the selected retailer for contact details
-    setShowContactDetails(true); // Show the contact details modal
+    setSelectedRetailer(retailer);
+    setShowContactDetails(true);
   };
 
   const handleCloseModal = () => {
-    setSelectedRetailer(null); // Close the modal
-    setShowContactDetails(false); // Close the contact details modal
+    setSelectedRetailer(null);
+    setShowContactDetails(false);
   };
 
   return (
-    <div className="bg-gray-900 h-screen">
+    <div className="bg-gray-900 min-h-screen">
       <DistributorsNavbar />
       <div className="container mx-auto p-4 pt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="max-w-4xl mx-auto">
           {loading && (
             <p className="text-blue-500 text-center">Loading retailers...</p>
           )}
