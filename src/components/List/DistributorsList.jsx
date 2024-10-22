@@ -13,7 +13,7 @@ const DistributorsList = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:8000/api/users/distributors", {
+          "https://retail-connect-backend.onrender.com/api/users/distributors", {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
           }
@@ -39,7 +39,7 @@ const DistributorsList = () => {
     const userEmail = JSON.parse(localStorage.getItem("userdata"))?.email;
   
     try {
-      const response = await fetch(`http://localhost:8000/api/network/add`, {
+      const response = await fetch(`https://retail-connect-backend.onrender.com/api/network/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

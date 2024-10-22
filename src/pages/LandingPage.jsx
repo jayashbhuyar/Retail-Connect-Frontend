@@ -133,7 +133,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/products/all", {
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/products/all", {
           method: "GET", // Specify the request method if needed (GET is default)
           credentials: "include", // Include credentials with the request
         });

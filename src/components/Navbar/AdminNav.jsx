@@ -28,7 +28,7 @@ const AdminNav = () => {
   const handleSignOut = async () => {
     try {
       // Optionally, notify the server to invalidate the token (if token invalidation is needed)
-      await fetch('http://localhost:8000/api/auth/logout', {
+      await fetch('https://retail-connect-backend.onrender.com/api/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include credentials (cookies) in the request
       });

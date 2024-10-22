@@ -17,7 +17,7 @@ const CompletedRetail = () => {
     const fetchCompletedOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/completed-by-email?userEmail=${userEmail}`,{
+          `https://retail-connect-backend.onrender.com/api/orders/completed-by-email?userEmail=${userEmail}`,{
             withCredentials:true
           }
         );
@@ -36,7 +36,7 @@ const CompletedRetail = () => {
 
   const handleRemoveOrder = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/orders/delete-rejected/${orderId}`,{
+      await axios.delete(`https://retail-connect-backend.onrender.com/api/orders/delete-rejected/${orderId}`,{
         withCredentials:true
       });
       setCompletedOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));

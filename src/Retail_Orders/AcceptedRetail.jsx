@@ -19,7 +19,7 @@ const AcceptedRetail = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/accepted-by-email?userEmail=${userEmail}`,{
+          `https://retail-connect-backend.onrender.com/api/orders/accepted-by-email?userEmail=${userEmail}`,{
             withCredentials:true
           }
         );
@@ -44,7 +44,7 @@ const AcceptedRetail = () => {
   const handleSubmitUpdateMessage = async (orderId) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/orders/update-message/${orderId}`,
+        `https://retail-connect-backend.onrender.com/api/orders/update-message/${orderId}`,
         { newMessage },{
           withCredentials:true
         }

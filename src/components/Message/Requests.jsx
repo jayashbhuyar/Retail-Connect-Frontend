@@ -11,7 +11,7 @@ const Requests = () => {
       console.log("Fetching requests for email:", userEmail); // Log the email being used
       try {
         const response = await fetch(
-          `http://localhost:8000/api/network/pending?email=${userEmail}`, {
+          `https://retail-connect-backend.onrender.com/api/network/pending?email=${userEmail}`, {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
           } // Fetch pending requests
@@ -33,7 +33,7 @@ const Requests = () => {
   const handleAccept = async (requestId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/network/status/${requestId}`,
+        `https://retail-connect-backend.onrender.com/api/network/status/${requestId}`,
         {
           method: "PUT",
           headers: {
@@ -60,7 +60,7 @@ const Requests = () => {
   const handleReject = async (requestId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/network/status/${requestId}`,
+        `https://retail-connect-backend.onrender.com/api/network/status/${requestId}`,
         {
           method: "PUT",
           headers: {

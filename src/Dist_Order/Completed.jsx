@@ -19,7 +19,7 @@ const Completed = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/orders/completed`,
+          `https://retail-connect-backend.onrender.com/api/orders/completed`,
           {
             params: {
               distributorEmail, // Include any query parameters needed

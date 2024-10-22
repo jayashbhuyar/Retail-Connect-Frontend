@@ -37,7 +37,7 @@ const Signup = () => {
 
   const handleSendOTP = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/otp/send-otp', {
+      const response = await fetch('https://retail-connect-backend.onrender.com/api/otp/send-otp', {
         method: 'POST',
         credentials:"include",
         headers: {
@@ -64,7 +64,7 @@ const Signup = () => {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/otp/verify-otp", {
+      const response = await fetch("https://retail-connect-backend.onrender.com/api/otp/verify-otp", {
         method: "POST",
         credentials:"include",
         headers: {
@@ -110,7 +110,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/api/auth/register", {
+      const response = await fetch("https://retail-connect-backend.onrender.com/api/auth/register", {
         method: "POST",
         credentials:"include",
         headers: {

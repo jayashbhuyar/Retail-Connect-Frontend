@@ -16,7 +16,7 @@ const OrderInfo = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await fetch(
-        `http://localhost:8000/api/products/${productId}`, {
+        `https://retail-connect-backend.onrender.com/api/products/${productId}`, {
           method: "GET", // Specify the request method if needed (GET is default)
           credentials: "include", // Include credentials with the request
         }
@@ -28,7 +28,7 @@ const OrderInfo = () => {
     const fetchDistributorInfo = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/products/${productId}/distributor`, {
+          `https://retail-connect-backend.onrender.com/api/products/${productId}/distributor`, {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
           }
@@ -104,7 +104,7 @@ const OrderInfo = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/orders/place', {
+      const response = await fetch('https://retail-connect-backend.onrender.com/api/orders/place', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const OrderInfo = () => {
 
   const updateDistributorStock = async (distributorEmail1, productId, quantity) => {
     try {
-      const response = await fetch('http://localhost:8000/api/products/update-stock', {
+      const response = await fetch('https://retail-connect-backend.onrender.com/api/products/update-stock', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

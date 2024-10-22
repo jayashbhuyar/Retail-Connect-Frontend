@@ -46,7 +46,7 @@ const RetailersList = () => {
     const fetchRetailers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/api/users/retailers", {
+          "https://retail-connect-backend.onrender.com/api/users/retailers", {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
           }

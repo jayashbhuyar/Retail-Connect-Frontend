@@ -20,14 +20,14 @@ const AdminHome = () => {
     const fetchData = async () => {
       try {
         const usersResponse = await axios.get(
-          "http://localhost:8000/admin/orders",{
+          "https://retail-connect-backend.onrender.com/admin/orders",{
             withCredentials:true
           }
         );
         setUsers(usersResponse.data);
 
         const ordersResponse = await axios.get(
-          "http://localhost:8000/admin/users",{
+          "https://retail-connect-backend.onrender.com/admin/users",{
             withCredentials:true
           }
         );

@@ -25,7 +25,7 @@ const MyNetwork = () => {
       console.log("Fetching accepted requests for email:", userEmail);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/network/accepted?email=${userEmail}`, {
+          `https://retail-connect-backend.onrender.com/api/network/accepted?email=${userEmail}`, {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
           }
@@ -47,7 +47,7 @@ const MyNetwork = () => {
   const handleReject = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/network/reject/status/${id}`,
+        `https://retail-connect-backend.onrender.com/api/network/reject/status/${id}`,
         {
           method: "PUT",
           headers: {

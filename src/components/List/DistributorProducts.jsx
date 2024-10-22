@@ -35,7 +35,7 @@ const DistributorProducts = () => {
         return;
       }
       try {
-        const response = await fetch(`http://localhost:8000/api/products/distributor/${distributorEmail}`,
+        const response = await fetch(`https://retail-connect-backend.onrender.com/api/products/distributor/${distributorEmail}`,
           {
             method: "GET", // Specify the request method if needed (GET is default)
             credentials: "include", // Include credentials with the request
@@ -91,7 +91,7 @@ const DistributorProducts = () => {
 
   const handleMoreInfo = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/products/${productId}`, {
+      const response = await fetch(`https://retail-connect-backend.onrender.com/api/products/${productId}`, {
         method: "GET", // Specify the request method if needed (GET is default)
         credentials: "include", // Include credentials with the request
       });

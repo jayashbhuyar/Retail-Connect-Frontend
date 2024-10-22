@@ -30,7 +30,7 @@ const Accepted = () => {
 
      try {
   const response = await axios.get(
-    `http://localhost:8000/api/orders/accepted`,
+    `https://retail-connect-backend.onrender.com/api/orders/accepted`,
     {
       params: {
         distributorEmail,
@@ -55,7 +55,7 @@ const Accepted = () => {
   const handleCompleteOrder = async (orderId) => {
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/orders/${orderId}/status`, // URL
+        `https://retail-connect-backend.onrender.com/api/orders/${orderId}/status`, // URL
         { /* Include any data you want to send in the body of the PUT request */ },
         {
           withCredentials: true, // Include credentials (cookies) with the request
