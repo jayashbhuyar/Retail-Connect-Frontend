@@ -45,6 +45,7 @@ import ComplaintAndReviewPage from "./pages/ComplaintAndreview";
 import NewsFeed from "./pages/Newsfeed";
 import InvoicePage from "./pages/InvoicePage";
 import DistributorProducts from "./components/List/DistributorProducts";
+import Chat from "./chat/Chat"
 
 const App = () => {
   return (
@@ -91,7 +92,7 @@ const App = () => {
         <Route path="/newsfeed" element={<NewsFeed/>} />
         <Route path="/invoicepage" element={<InvoicePage/>} />
         <Route path="/distributor-products/:distributorEmail" element={<DistributorProducts />} />
-
+        <Route path="/chat" element={<Chat/>} />
 
         
       </Routes>

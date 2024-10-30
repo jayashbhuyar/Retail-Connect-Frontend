@@ -110,9 +110,11 @@ const DistributorProducts = () => {
     <>
       <RetailerNavbar />
       <div className="p-4 md:p-6 bg-gray-900 min-h-screen">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center">Distributor Products</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center">
+          Distributor Products
+        </h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        
+
         <div className="mb-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
           <div className="w-full md:w-1/3 relative">
             <input
@@ -122,23 +124,34 @@ const DistributorProducts = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={20}
+            />
           </div>
           <button
             className="md:hidden bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
           >
             {isFilterOpen ? <X size={20} /> : <Filter size={20} />}
-            <span className="ml-2">{isFilterOpen ? "Close Filters" : "Open Filters"}</span>
+            <span className="ml-2">
+              {isFilterOpen ? "Close Filters" : "Open Filters"}
+            </span>
           </button>
-          <div className={`w-full md:w-2/3 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 ${isFilterOpen ? 'block' : 'hidden md:flex'}`}>
+          <div
+            className={`w-full md:w-2/3 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 ${
+              isFilterOpen ? "block" : "hidden md:flex"
+            }`}
+          >
             <select
               className="w-full md:w-1/2 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
             >
               {productTypes.map((type) => (
-                <option key={type} value={type}>{type}</option>
+                <option key={type} value={type}>
+                  {type}
+                </option>
               ))}
             </select>
             <select
@@ -166,10 +179,15 @@ const DistributorProducts = () => {
                 className="h-48 w-full object-cover"
               />
               <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-lg font-semibold mb-2">{product.productName}</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  {product.productName}
+                </h3>
                 <p className="text-gray-400">Type: {product.productType}</p>
-                <p className="text-gray-400">Price: ${product.price.toFixed(2)}</p>
-                <p className="text-gray-400 mb-4">Stock: {product.stock}</p>
+                <p className="text-gray-400">Quantity: {product.quantity}</p>
+                <p className="text-gray-400">
+                  Price: ₹ {product.price.toFixed(2)}
+                </p>
+                {/* <p className="text-gray-400 mb-4">Stock: {product.stock}</p> */}
                 <div className="mt-auto flex space-x-2">
                   <button
                     onClick={() => handleMoreInfo(product._id)}
@@ -193,13 +211,30 @@ const DistributorProducts = () => {
         {selectedProduct && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
             <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg max-w-md w-full m-4">
-              <h2 className="text-xl font-bold mb-4">Product: {selectedProduct.productName}</h2>
-              <p className="mb-2"><strong>Distributor Name:</strong> {selectedProduct.distributorName}</p>
-              <p className="mb-2"><strong>Distributor Email:</strong> {selectedProduct.distributorEmail}</p>
-              <p className="mb-2"><strong>Description:</strong> {selectedProduct.description}</p>
-              <p className="mb-2"><strong>Stock:</strong> {selectedProduct.stock}</p>
-              <p className="mb-2"><strong>Price:</strong> ${selectedProduct.price.toFixed(2)}</p>
-              <p className="mb-4"><strong>Registered On:</strong> {new Date(selectedProduct.createdAt).toLocaleDateString()}</p>
+              <h2 className="text-xl font-bold mb-4">
+                Product: {selectedProduct.productName}
+              </h2>
+              <p className="mb-2">
+                <strong>Distributor Name:</strong>{" "}
+                {selectedProduct.distributorName}
+              </p>
+              <p className="mb-2">
+                <strong>Distributor Email:</strong>{" "}
+                {selectedProduct.distributorEmail}
+              </p>
+              <p className="mb-2">
+                <strong>Description:</strong> {selectedProduct.description}
+              </p>
+              <p className="mb-2">
+                <strong>Stock:</strong> {selectedProduct.stock}
+              </p>
+              <p className="mb-2">
+                <strong>Price:</strong> ₹{selectedProduct.price.toFixed(2)}
+              </p>
+              <p className="mb-4">
+                <strong>Registered On:</strong>{" "}
+                {new Date(selectedProduct.createdAt).toLocaleDateString()}
+              </p>
               <button
                 onClick={() => setSelectedProduct(null)}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200"

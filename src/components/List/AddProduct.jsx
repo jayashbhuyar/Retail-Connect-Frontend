@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import DistributorsNavbar from "../Navbar/DistributorsNavbar";
-import { ChevronDown, Package, DollarSign, Truck, Image, Upload, IndianRupeeIcon } from "lucide-react";
+import {
+  ChevronDown,
+  Package,
+  DollarSign,
+  Truck,
+  Upload,
+  IndianRupeeIcon,
+} from "lucide-react";
 
 const AddProduct = () => {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const [productType, setProductType] = useState("");
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -12,6 +19,7 @@ const AddProduct = () => {
   const [stock, setStock] = useState(0);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userdata")) || {};
   const distributorName = userData.name || "";
@@ -30,52 +38,225 @@ const AddProduct = () => {
     "Furniture",
   ];
 
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file && !file.type.startsWith('image/')) {
+  //     setError('Please upload an image file');
+  //     return;
+  //   }
+  //   setImageFile(file);
+  //   setError(null); // Clear any previous errors
+  // };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    
+    if (!file) {
+      setImageFile(null);
+      setError('Please select an image file');
+      return;
+    }
+  
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setImageFile(null);
+      setError('Please upload an image file (JPEG, PNG, GIF)');
+      return;
+    }
+  
+    // Check file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      setImageFile(null);
+      setError('Image file must be smaller than 5MB');
+      return;
+    }
+  
+    setImageFile(file);
+    setError(null);
+  };
+  const clearForm = () => {
+    setImageFile(null);
+    setProductType("");
+    setProductName("");
+    setDescription("");
+    setQuantity(0);
+    setPrice(0);
+    setStock(0);
+  };
+
+  // const uploadImageToCloudinary = async (file) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   formData.append("upload_preset", "my_upload_preset"); // Your Cloudinary upload preset
+
+  //   const response = await fetch(
+  //     "https://api.cloudinary.com/v1_1/dlx3l4a9p/image/upload",
+  //     {
+  //       method: "POST",
+  //       body: formData,
+  //     },
+  //     {
+  //       credentials:"include"
+  //     }
+     
+  //   );
+
+  //   if (!response.ok) throw new Error("Image upload failed");
+  //   const data = await response.json();
+  //   return data.secure_url;
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError(null);
+  //   setSuccess(null);
+  //   setIsLoading(true);
+
+  //   try {
+  //     // First upload image to Cloudinary
+  //     let imageUrl = null;
+  //     if (imageFile) {
+  //       try {
+  //         imageUrl = await uploadImageToCloudinary(imageFile);
+  //       } catch (uploadError) {
+  //         throw new Error("Failed to upload image. Please try again.");
+  //       }
+  //     }
+
+  //     // Create product with image URL
+  //     const formData = new FormData();
+  //     if (imageUrl) formData.append("imageUrl", imageUrl);
+  //     formData.append("productType", productType);
+  //     formData.append("productName", productName);
+  //     formData.append("description", description);
+  //     formData.append("distributorName", distributorName);
+  //     formData.append("distributorEmail", distributorEmail);
+  //     formData.append("quantity", quantity);
+  //     formData.append("price", price);
+  //     formData.append("stock", stock);
+
+  //     const response = await fetch("https://retail-connect-backend.onrender.com/api/products/add", {
+  //       method: "POST",
+  //       body: formData,
+  //       credentials: "include",
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (data.success) {
+  //       setSuccess(data.message || "Product added successfully!");
+  //       clearForm();
+  //     } else {
+  //       throw new Error(data.error || "Failed to add product");
+  //     }
+  //   } catch (error) {
+  //     console.error("Product creation error:", error);
+  //     setError(error.message || "An error occurred while adding the product.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError(null);
+  //   setSuccess(null);
+  //   setIsLoading(true);
+  
+  //   try {
+  //     if (!imageFile) {
+  //       throw new Error("Please select an image file");
+  //     }
+  
+  //     const formData = new FormData();
+  //     formData.append("image", imageFile);
+  //     formData.append("productType", productType);
+  //     formData.append("productName", productName);
+  //     formData.append("description", description);
+  //     formData.append("distributorName", distributorName);
+  //     formData.append("distributorEmail", distributorEmail);
+  //     formData.append("quantity", quantity);
+  //     formData.append("price", price);
+  //     formData.append("stock", stock);
+  
+  //     const response = await fetch("https://retail-connect-backend.onrender.com/api/products/add", {
+  //       method: "POST",
+  //       body: formData,
+  //       // Remove the credentials include if you're not using sessions
+  //       // credentials: "include",
+  //     });
+  
+  //     const data = await response.json();
+      
+  //     if (!data.success) {
+  //       throw new Error(data.error || "Failed to add product");
+  //     }
+  
+  //     setSuccess(data.message || "Product added successfully!");
+  //     clearForm();
+  //   } catch (error) {
+  //     console.error("Product creation error:", error);
+  //     setError(error.message || "An error occurred while adding the product");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-
-    const productData = {
-      imageUrl,
-      productType,
-      productName,
-      description,
-      distributorName,
-      distributorEmail,
-      quantity,
-      price,
-      stock,
-    };
-
+    setIsLoading(true);
+  
     try {
+      if (!imageFile) {
+        throw new Error("Please select an image file");
+      }
+  
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      formData.append("productType", productType);
+      formData.append("productName", productName);
+      formData.append("description", description);
+      formData.append("distributorName", distributorName);
+      formData.append("distributorEmail", distributorEmail);
+      formData.append("quantity", quantity);
+      formData.append("price", price);
+      formData.append("stock", stock);
+  
+      // Get the token from localStorage
+      const token = localStorage.getItem('token');
+  
       const response = await fetch("https://retail-connect-backend.onrender.com/api/products/add", {
         method: "POST",
+        body: formData,
         headers: {
-          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`, // Add the token to headers
         },
-        body: JSON.stringify(productData),
-        credentials: "include", // Include credentials with the request
-       
+        credentials: 'include', // Include cookies
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess(data.message);
-        setImageUrl("");
-        setProductType("");
-        setProductName("");
-        setDescription("");
-        setQuantity(0);
-        setPrice(0);
-        setStock(0);
-      } else {
-        setError(data.error);
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
+  
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || "Failed to add product");
+      }
+  
+      setSuccess(data.message);
+      clearForm();
     } catch (error) {
-      setError("An error occurred while adding the product.");
+      console.error("Product creation error:", error);
+      setError(error.message || "An error occurred while adding the product");
+    } finally {
+      setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
@@ -84,7 +265,7 @@ const AddProduct = () => {
         <div className="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-2xl overflow-hidden transform transition-all hover:scale-105">
           <div className="flex flex-col md:flex-row">
             <div className="md:flex-shrink-0 bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center p-4 md:p-8">
-              <Image className="h-20 w-20 md:h-32 md:w-32 text-white animate-pulse" />
+              <Upload className="h-20 w-20 md:h-32 md:w-32 text-white animate-pulse" />
             </div>
             <div className="p-4 md:p-8 w-full">
               <h2 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4 md:mb-6">
@@ -94,18 +275,17 @@ const AddProduct = () => {
                 <div className="grid grid-cols-1 gap-y-4 md:gap-y-6 gap-x-4 md:grid-cols-2">
                   <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      Image URL
+                      Image
                     </label>
                     <div className="mt-1 flex rounded-md shadow-sm">
                       <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-600 bg-gray-700 text-gray-400 text-sm">
                         <Upload className="h-4 w-4 md:h-5 md:w-5" />
                       </span>
                       <input
-                        type="text"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
+                        type="file"
+                        onChange={handleImageUpload}
                         required
-                        placeholder="Enter image URL"
+                        accept="image/*"
                         className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md bg-gray-700 border-gray-600 text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                       />
                     </div>
@@ -248,9 +428,10 @@ const AddProduct = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out transform hover:scale-105"
+                    disabled={isLoading}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Add Product
+                    {isLoading ? "Adding Product..." : "Add Product"}
                   </button>
                 </div>
               </form>

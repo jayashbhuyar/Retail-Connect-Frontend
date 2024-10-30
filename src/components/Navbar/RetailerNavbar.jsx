@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
 import {
   Bars3Icon,
-  BellIcon,
   XMarkIcon,
   ChevronDownIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
+import { Globe } from "lucide-react";
 
 const RetailerNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isMobileProductDropdownOpen, setIsMobileProductDropdownOpen] = useState(false);
+  const [isMobileProductDropdownOpen, setIsMobileProductDropdownOpen] =
+    useState(false);
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
-  const [isMobileOrdersDropdownOpen, setIsMobileOrdersDropdownOpen] = useState(false);
+  const [isMobileOrdersDropdownOpen, setIsMobileOrdersDropdownOpen] =
+    useState(false);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -32,236 +33,249 @@ const RetailerNavbar = () => {
     }
   }, []);
 
-  const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const toggleProductDropdown = () => setIsProductDropdownOpen(!isProductDropdownOpen);
-  const toggleMobileProductDropdown = () => setIsMobileProductDropdownOpen(!isMobileProductDropdownOpen);
-  const toggleOrdersDropdown = () => setIsOrdersDropdownOpen(!isOrdersDropdownOpen);
-  const toggleMobileOrdersDropdown = () => setIsMobileOrdersDropdownOpen(!isMobileOrdersDropdownOpen);
-
   const handleLogout = async () => {
     try {
-      // Optionally, notify the server to invalidate the token (if token invalidation is needed)
-      await fetch('https://retail-connect-backend.onrender.com/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include', // Include credentials (cookies) in the request
+      await fetch("https://retail-connect-backend.onrender.com/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
       });
-  
-      // Remove the JWT token from the cookies
-      Cookies.remove('token', { secure: true, sameSite: 'strict' });
-      localStorage.removeItem('userdata');
-  
-      // Redirect to login page
-      window.location.href = '/auth/login';
+      Cookies.remove("token", { secure: true, sameSite: "strict" });
+      localStorage.removeItem("userdata");
+      window.location.href = "/auth/login";
     } catch (error) {
       console.error("Error during logout:", error);
-      // Optionally, show an error notification to the user
     }
   };
+
+  const UserAvatar = ({ size = "h-8 w-8" }) =>
+    userData && userData.image ? (
+      <img
+        className={`${size} rounded-full object-cover`}
+        src={userData.image}
+        alt="User"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "https://via.placeholder.com/40";
+        }}
+      />
+    ) : (
+      <div
+        className={`${size} rounded-full bg-gray-500 flex items-center justify-center text-white`}
+      >
+        {userData && userData.firstName ? (
+          <span className="text-lg font-medium">
+            {userData.firstName.charAt(0).toUpperCase()}
+          </span>
+        ) : (
+          <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
+        )}
+      </div>
+    );
+
+  const NavLink = ({ to, children }) => (
+    <Link
+      to={to}
+      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
+    >
+      {children}
+    </Link>
+  );
+
+  const MobileNavLink = ({ to, children }) => (
+    <Link
+      to={to}
+      className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+    >
+      {children}
+    </Link>
+  );
+
+  const DesktopDropdownMenu = ({ isOpen, toggle, title, children }) => (
+    <div className="relative">
+      <button
+        onClick={toggle}
+        className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out flex items-center"
+      >
+        {title} <ChevronDownIcon className="w-5 h-5 ml-1" />
+      </button>
+      {isOpen && (
+        <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+
+  const MobileDropdownMenu = ({ isOpen, toggle, title, children }) => (
+    <div>
+      <button
+        onClick={toggle}
+        className="text-gray-300 hover:bg-gray-700 hover:text-white block w-full text-left px-3 py-2 rounded-md text-base font-medium"
+      >
+        {title} <ChevronDownIcon className="w-5 h-5 inline ml-1" />
+      </button>
+      {isOpen && <div className="pl-6 space-y-1">{children}</div>}
+    </div>
+  );
+
+  const UserMenuContent = ({ isMobile }) => (
+    <div
+      className={`
+      origin-top-right absolute right-0 mt-2 w-64 rounded-lg shadow-lg 
+      bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50
+      ${isMobile ? "sm:hidden" : "hidden sm:block"}
+    `}
+    >
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center space-x-3">
+          <UserAvatar size="h-12 w-12" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">
+              {userData
+                ? `${userData.name || "Guest"} ${userData.lastName || ""}`
+                : "Guest"}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {userData?.email || "No email"}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {userData?.companyName || userData?.shopName || ""}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="py-1">
+        <Link
+          to="/profile"
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Your Profile
+        </Link>
+        <Link
+          to="/settings"
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Settings
+        </Link>
+        <div className="px-4 py-2 text-sm text-gray-500 border-t border-gray-200">
+          {userData && userData.role}
+        </div>
+        <button
+          onClick={handleLogout}
+          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <nav className="bg-gray-900 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-25">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/homepageretailer">
               <img
-                className="h-14 w-auto max-w-full"
+                className="h-14 w-auto"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1k4OmmdnQ9swvTRpaJML0CkWzJrg7XMO_JsqTl9xlCDzgftvgyiFeHPn56qZhxzzInA&usqp=CAU"
                 alt="Your Company"
               />
             </Link>
           </div>
-          <div className="hidden sm:block">
-            <Link
-              to="/retailerNetwork"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
-            >
-              {/* Y're {userData && userData.role} */}
-              Your Network
-            </Link>
-          </div>
 
-          {/* Desktop menu */}
-          <div className="hidden sm:flex sm:space-x-6">
-            <Link
-              to="/distributorslist"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
-            >
-              Distributors
-            </Link>
+          {/* Desktop Navigation */}
+          <div className="hidden sm:flex sm:items-center sm:space-x-6">
+            <NavLink to="/retailerNetwork">Your Network</NavLink>
+            <NavLink to="/chat">Messages</NavLink>
+            <NavLink to="/distributorslist">Distributors</NavLink>
 
-            {/* Product Dropdown */}
-            <div className="relative">
-              <button
-                onClick={toggleProductDropdown}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out flex items-center"
+            {/* Products Dropdown */}
+            <DesktopDropdownMenu
+              isOpen={isProductDropdownOpen}
+              toggle={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
+              title="Products"
+            >
+              <Link
+                to="/latestproduct"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
-                Products <ChevronDownIcon className="w-5 h-5 ml-1" />
-              </button>
-              {isProductDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <Link
-                    to="/latestproduct"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    New Product
-                  </Link>
-                  <Link
-                    to="/productlistall"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    All Products
-                  </Link>
-                </div>
-              )}
-            </div>
+                New Product
+              </Link>
+              <Link
+                to="/productlistall"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                All Products
+              </Link>
+            </DesktopDropdownMenu>
 
             {/* Orders Dropdown */}
-            <div className="relative">
-              <button
-                onClick={toggleOrdersDropdown}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out flex items-center"
+            <DesktopDropdownMenu
+              isOpen={isOrdersDropdownOpen}
+              toggle={() => setIsOrdersDropdownOpen(!isOrdersDropdownOpen)}
+              title="Orders"
+            >
+              <Link
+                to="/pendingretail"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
-                Orders <ChevronDownIcon className="w-5 h-5 ml-1" />
-              </button>
-              {isOrdersDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-                  <Link
-                    to="/pendingretail"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Pending Orders
-                  </Link>
-                  <Link
-                    to="/acceptedretail"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Accepted Orders
-                  </Link>
-                  <Link
-                    to="/rejectedretail"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Rejected Orders
-                  </Link>
-                  <Link
-                    to="/completedretail"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Completed Orders
-                  </Link>
-                </div>
-              )}
-            </div>
-            <Link
-              to="/invoicepage"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
-            >
-              Invoices
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
-            >
-              About
-            </Link>
-            <Link
-              to="/complaintandreview"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out"
-            >
-              Complaint
-            </Link>
+                Pending Orders
+              </Link>
+              <Link
+                to="/acceptedretail"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Accepted Orders
+              </Link>
+              <Link
+                to="/rejectedretail"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Rejected Orders
+              </Link>
+              <Link
+                to="/completedretail"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Completed Orders
+              </Link>
+            </DesktopDropdownMenu>
+
+            <NavLink to="/invoicepage">Invoices</NavLink>
+            <NavLink to="/about">About</NavLink>
+            <NavLink to="/complaintandreview">Complaint</NavLink>
           </div>
 
-          {/* Mobile Menu Button and User Menu */}
+          {/* User Menu & Mobile Menu Button */}
           <div className="flex items-center space-x-4">
+            {/* Daily News Bell */}
             <div className="hidden sm:block">
               <Link to="/newsfeed">
-                <button
-                  type="button"
-                  className="bg-gray-800 p-2 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                <button className="bg-gray-800 p-2 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                  <span className="sr-only">View News</span>
+                  <Globe className="h-6 w-6" aria-hidden="true" />
                 </button>
               </Link>
             </div>
 
+            {/* User Menu */}
             <div className="relative">
               <button
-                type="button"
-                className="bg-gray-800 flex items-center justify-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                id="user-menu-button"
-                aria-expanded={isUserMenuOpen}
-                aria-haspopup="true"
-                onClick={toggleUserMenu}
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="bg-gray-800 flex items-center justify-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white p-1"
               >
                 <span className="sr-only">Open user menu</span>
-                {userData && userData.image ? (
-                  <img
-                    className="h-8 w-8 rounded-full"
-                    src={userData.image}
-                    alt="User"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "https://via.placeholder.com/40";
-                    }}
-                  />
-                ) : (
-                  <div className="h-8 w-8 rounded-full bg-gray-500 flex items-center justify-center text-white">
-                    {userData && userData.firstName ? (
-                      userData.firstName.charAt(0).toUpperCase()
-                    ) : (
-                      <UserCircleIcon className="h-6 w-6" aria-hidden="true" />
-                    )}
-                  </div>
-                )}
+                <UserAvatar />
               </button>
-              {isUserMenuOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                  <div className="px-4 py-2 text-sm text-gray-700">
-                    {userData
-                      ? `${userData.name || "Guest"} ${userData.lastName || ""}`
-                      : "Guest"}
-                  </div>
-                  <div className="px-4 py-2 text-xs text-gray-500">
-                    {userData?.email || "No email"}
-                  </div>
-                  <div className="px-4 py-2 text-xs text-gray-500">
-                    {userData?.companyName || userData?.shopName || ""}
-                  </div>
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Your Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Settings
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                         {userData && userData.role} 
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              )}
+              {isUserMenuOpen && <UserMenuContent isMobile={false} />}
             </div>
-      
+
+            {/* Mobile Menu Button */}
             <div className="sm:hidden">
               <button
-                onClick={toggleMenu}
+                onClick={() => setIsOpen(!isOpen)}
                 className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
               >
                 <span className="sr-only">Open main menu</span>
@@ -276,7 +290,7 @@ const RetailerNavbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -285,115 +299,58 @@ const RetailerNavbar = () => {
           className="sm:hidden"
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link
-              to="/retailerNetwork"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              {/* Y're {userData && userData.role} */}
-              Your Network
-            </Link>
-            <Link
-              to="/distributorslist"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Distributors
-            </Link>
+            <MobileNavLink to="/retailerNetwork">Your Network</MobileNavLink>
+            <MobileNavLink to="/chat">Messages</MobileNavLink>
+            <MobileNavLink to="/distributorslist">Distributors</MobileNavLink>
 
-            {/* Mobile Product Dropdown */}
-            <div>
-              <button
-                onClick={toggleMobileProductDropdown}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white block w-full text-left px-3 py-2 rounded-md text-base font-medium"
-              >
-                Products <ChevronDownIcon className="w-5 h-5 inline" />
-              </button>
-              {isMobileProductDropdownOpen && (
-                <div className="pl-6 space-y-1">
-                  <Link
-                    to="/latestproduct"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    New Product
-                  </Link>
-                  <Link
-                    to="/productlistall"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    All Products
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Mobile Products Dropdown */}
+            <MobileDropdownMenu
+              isOpen={isMobileProductDropdownOpen}
+              toggle={() =>
+                setIsMobileProductDropdownOpen(!isMobileProductDropdownOpen)
+              }
+              title="Products"
+            >
+              <MobileNavLink to="/latestproduct">New Product</MobileNavLink>
+              <MobileNavLink to="/productlistall">All Products</MobileNavLink>
+            </MobileDropdownMenu>
 
             {/* Mobile Orders Dropdown */}
-            <div>
-              <button
-                onClick={toggleMobileOrdersDropdown}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white block w-full text-left px-3 py-2 rounded-md text-base font-medium"
-              >
-                Orders <ChevronDownIcon className="w-5 h-5 inline" />
-              </button>
-              {isMobileOrdersDropdownOpen && (
-                <div className="pl-6 space-y-1">
-                  <Link
-                    to="/pendingretail"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    Pending Orders
-                  </Link>
-                  <Link
-                    to="/acceptedretail"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    Accepted Orders
-                  </Link>
-                  <Link
-                    to="/rejectedretail"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  ></Link>
-                  <Link
-                    to="/rejectedretail"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    Rejected Orders
-                  </Link>
-                  <Link
-                    to="/completedretail"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  >
-                    Completed Orders
-                  </Link>
-                </div>
-              )}
-            </div>
+            <MobileDropdownMenu
+              isOpen={isMobileOrdersDropdownOpen}
+              toggle={() =>
+                setIsMobileOrdersDropdownOpen(!isMobileOrdersDropdownOpen)
+              }
+              title="Orders"
+            >
+              <MobileNavLink to="/pendingretail">Pending Orders</MobileNavLink>
+              <MobileNavLink to="/acceptedretail">
+                Accepted Orders
+              </MobileNavLink>
+              <MobileNavLink to="/rejectedretail">
+                Rejected Orders
+              </MobileNavLink>
+              <MobileNavLink to="/completedretail">
+                Completed Orders
+              </MobileNavLink>
+            </MobileDropdownMenu>
 
-            <Link
-              to="/invoicepage"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Invoices
-            </Link>
-            <Link
-              to="/about"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              About
-            </Link>
-            <Link
-              to="/complaintandreview"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Complaint
-            </Link>
-            <Link
+            <MobileNavLink to="/invoicepage">Invoices</MobileNavLink>
+            <MobileNavLink to="/about">About</MobileNavLink>
+            <MobileNavLink to="/complaintandreview">Complaint</MobileNavLink>
+            <MobileNavLink
               to="/newsfeed"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="inline-flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
             >
-              Notifications
-            </Link>
+              <Globe className="h-6 w-6 mr-2" />
+              Daily News
+            </MobileNavLink>
           </div>
         </motion.div>
       )}
+
+      {/* Mobile User Menu */}
+      {isUserMenuOpen && <UserMenuContent isMobile={true} />}
     </nav>
   );
 };

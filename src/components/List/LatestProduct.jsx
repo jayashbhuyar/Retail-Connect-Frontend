@@ -47,10 +47,10 @@ const LatestProducts = () => {
             />
             <h3 className="text-lg font-bold text-white mb-2">{product.productName}</h3>
             <p className="text-gray-400">Type: {product.productType}</p>
-            <p className="text-gray-400">Price: ${product.price.toFixed(2)}</p>
+            <p className="text-gray-400">Price: ₹{product.price.toFixed(2)}</p>
             <p className="text-gray-400">Quantity: {product.quantity}</p>
             <p className="text-gray-400">Created At: {new Date(product.createdAt).toLocaleDateString()}</p>
-            <div className="mt-auto flex space-x-2 pt-4">
+            {/* <div className="mt-auto flex space-x-2 pt-4">
               <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200">
                 More Info
               </button>
@@ -60,7 +60,7 @@ const LatestProducts = () => {
               <button className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition duration-200">
                 Add to Cart
               </button>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

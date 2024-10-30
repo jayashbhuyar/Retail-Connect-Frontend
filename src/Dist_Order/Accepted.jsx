@@ -56,14 +56,17 @@ const Accepted = () => {
     try {
       const response = await axios.put(
         `https://retail-connect-backend.onrender.com/api/orders/${orderId}/status`, // URL
-        { /* Include any data you want to send in the body of the PUT request */ },
+        { 
+          status: "completed",
+          completedOn: new Date().toISOString(), // Sending the current date as completion date
+        },
         {
           withCredentials: true, // Include credentials (cookies) with the request
         }
       );
     
       const updatedOrder = response.data;
-
+  
       setAcceptedOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === updatedOrder._id ? updatedOrder : order
@@ -74,6 +77,7 @@ const Accepted = () => {
       setError("Failed to update order status.");
     }
   };
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

@@ -19,8 +19,9 @@ const AcceptedRetail = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://retail-connect-backend.onrender.com/api/orders/accepted-by-email?userEmail=${userEmail}`,{
-            withCredentials:true
+          `https://retail-connect-backend.onrender.com/api/orders/accepted-by-email?userEmail=${userEmail}`,
+          {
+            withCredentials: true
           }
         );
         setAcceptedOrders(response.data);
@@ -45,8 +46,9 @@ const AcceptedRetail = () => {
     try {
       const response = await axios.put(
         `https://retail-connect-backend.onrender.com/api/orders/update-message/${orderId}`,
-        { newMessage },{
-          withCredentials:true
+        { newMessage },
+        {
+          withCredentials: true
         }
       );
       console.log(response.data);
@@ -75,8 +77,10 @@ const AcceptedRetail = () => {
       <RetailerNavbar />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-purple-300 mb-8 text-center">Accepted Orders</h1>
-        
+        <h1 className="text-4xl font-bold text-purple-300 mb-8 text-center">
+          Accepted Orders
+        </h1>
+
         {error && (
           <div className="bg-red-900 border-l-4 border-red-500 text-red-100 p-4 mb-6 rounded-r" role="alert">
             <div className="flex items-center">
@@ -94,62 +98,140 @@ const AcceptedRetail = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {acceptedOrders.map((order) => (
-              <div
-                key={order._id}
-                className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
-              >
-                <div className="relative h-48">
-                  <img
-                    src={order.img}
-                    alt={order.productName}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
-                    <h2 className="text-xl font-semibold text-white p-4 truncate w-full">
-                      {order.productName}
-                    </h2>
+          <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <table className="w-full bg-gray-800 rounded-lg overflow-hidden hidden md:table">
+              <thead>
+                <tr className="bg-gray-900">
+                  <th className="p-4 text-left text-purple-300">Product</th>
+                  <th className="p-4 text-left text-purple-300">Distributor</th>
+                  <th className="p-4 text-left text-purple-300 hidden lg:table-cell">Email</th>
+                  <th className="p-4 text-left text-purple-300">Details</th>
+                  <th className="p-4 text-left text-purple-300">Message</th>
+                  <th className="p-4 text-left text-purple-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {acceptedOrders.map((order) => (
+                  <tr key={order._id} className="border-t border-gray-700 hover:bg-gray-700">
+                    <td className="p-4">
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src={order.img}
+                          alt={order.productName}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                        <span className="text-purple-300 font-medium">
+                          {order.productName}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <span className="text-purple-300">{order.distributorName}</span>
+                    </td>
+                    <td className="p-4 hidden lg:table-cell">
+                      <span className="text-purple-300">{order.distributorEmail}</span>
+                    </td>
+                    <td className="p-4">
+                      <div className="space-y-1">
+                        <p className="text-teal-300">Qty: {order.quantity}</p>
+                        <p className="text-teal-300">₹{order.price}</p>
+                        <p className="text-green-300">{order.status}</p>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      {editingOrderId === order._id ? (
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Enter new message"
+                            className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                          />
+                          <button
+                            onClick={() => handleSubmitUpdateMessage(order._id)}
+                            className="w-full bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition duration-200"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="text-gray-300">{order.msg || "No message"}</p>
+                      )}
+                    </td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => handleUpdateMessage(order._id)}
+                        className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-200 flex items-center"
+                      >
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        Update Message
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile Card View */}
+            <div className="space-y-4 md:hidden">
+              {acceptedOrders.map((order) => (
+                <div key={order._id} className="bg-gray-800 rounded-lg p-4 space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={order.img}
+                      alt={order.productName}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="text-purple-300 font-medium">{order.productName}</h3>
+                      <h2 className="text-green-400 font-medium">Distributor Info:</h2>
+                      <p className="text-purple-300 text-sm">{order.distributorName}</p>
+                      <p className="text-purple-300 text-sm">{order.distributorEmail}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="text-teal-300">Quantity: {order.quantity}</div>
+                    <div className="text-teal-300">Price: ₹{order.price}</div>
+                    <div className="text-green-300">Status: {order.status}</div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="text-gray-300">
+                      <span className="font-medium text-purple-300">Message: </span>
+                      {editingOrderId === order._id ? (
+                        <div className="mt-2 space-y-2">
+                          <input
+                            type="text"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Enter new message"
+                            className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                          />
+                          <button
+                            onClick={() => handleSubmitUpdateMessage(order._id)}
+                            className="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-200"
+                          >
+                            Submit Message
+                          </button>
+                        </div>
+                      ) : (
+                        <span>{order.msg || "No message"}</span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => handleUpdateMessage(order._id)}
+                      className="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-200 flex items-center justify-center"
+                    >
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      Update Message
+                    </button>
                   </div>
                 </div>
-                <div className="p-4 space-y-2 text-sm">
-                  <p className="text-purple-300 truncate"><span className="font-medium">Distributor:</span> {order.distributorName}</p>
-                  <p className="text-purple-300 truncate"><span className="font-medium">Email:</span> {order.distributorEmail}</p>
-                  <p className="text-teal-300"><span className="font-medium">Quantity:</span> {order.quantity}</p>
-                  <p className="text-teal-300"><span className="font-medium">Price:</span> ₹ {order.price}</p>
-                  <p className="text-green-300"><span className="font-medium">Status:</span> {order.status}</p>
-                  <p className="text-gray-300 line-clamp-2 hover:line-clamp-none transition-all duration-300">
-                    <span className="font-medium text-purple-300">Message:</span> {order.msg || "No message provided"}
-                  </p>
-                  
-                  <button
-                    onClick={() => handleUpdateMessage(order._id)}
-                    className="w-full mt-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center justify-center"
-                  >
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    Update Message
-                  </button>
-
-                  {editingOrderId === order._id && (
-                    <div className="mt-2 space-y-2">
-                      <input
-                        type="text"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Enter new message"
-                        className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 text-sm"
-                      />
-                      <button
-                        onClick={() => handleSubmitUpdateMessage(order._id)}
-                        className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200 text-sm"
-                      >
-                        Submit Message
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>

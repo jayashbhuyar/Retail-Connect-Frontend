@@ -20,15 +20,17 @@ const AdminHome = () => {
     const fetchData = async () => {
       try {
         const usersResponse = await axios.get(
-          "https://retail-connect-backend.onrender.com/admin/orders",{
-            withCredentials:true
+          "https://retail-connect-backend.onrender.com/admin/orders",
+          {
+            withCredentials: true,
           }
         );
         setUsers(usersResponse.data);
 
         const ordersResponse = await axios.get(
-          "https://retail-connect-backend.onrender.com/admin/users",{
-            withCredentials:true
+          "https://retail-connect-backend.onrender.com/admin/users",
+          {
+            withCredentials: true,
           }
         );
         setOrders(ordersResponse.data);
@@ -85,7 +87,7 @@ const AdminHome = () => {
     };
 
     fetchData();
-  }, [users]);
+  }, []);
 
   const OrderTable = ({ orders, title, color }) => (
     <div

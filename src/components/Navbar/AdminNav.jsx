@@ -8,6 +8,7 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { Globe } from "lucide-react";
 
 
 const AdminNav = () => {
@@ -97,6 +98,13 @@ const AdminNav = () => {
               >
                 Complaints!
               </Link>
+              <Link
+              to="/newsfeed"
+              className="flex items-center text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+            >
+              <Globe className="h-6 w-6 mr-2" />
+              Daily News
+            </Link>
               <Link
                 to="/about"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"

@@ -50,12 +50,12 @@ const ProductCard = ({ product, onMoreInfo }) => {
             <span>Details</span>
             <ArrowRight className="h-4 w-4" />
           </button>
-          <Link to={`/orderinfo/${product._id}`} className="flex-1">
+          {/* <Link to={`/orderinfo/${product._id}`} className="flex-1">
             <button className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center justify-center space-x-1">
               <ShoppingCart className="h-4 w-4" />
               <span>Order</span>
             </button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
@@ -133,10 +133,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://retail-connect-backend.onrender.com/api/products/all", {
-          method: "GET", // Specify the request method if needed (GET is default)
-          credentials: "include", // Include credentials with the request
-        });
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/landingpage/products/all");
         const data = await response.json();
         if (response.ok) {
           setProducts(data);

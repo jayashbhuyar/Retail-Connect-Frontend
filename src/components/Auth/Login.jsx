@@ -74,7 +74,7 @@ const Login = () => {
 
         // Set the token as a cookie
         Cookies.set("token", data.token, {
-          expires: 1 / 24.0,
+          expires: 30,
           // secure: true,
           sameSite: "strict",
         });

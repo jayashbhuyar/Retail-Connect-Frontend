@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Lock, Phone, User, Loader2 } from "lucide-react";
+import { Mail, Lock, Phone, User, Loader2, Upload } from "lucide-react";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("retailer"); // Default role
+  const [role, setRole] = useState("retailer");
   const [companyName, setCompanyName] = useState("");
   const [shopName, setShopName] = useState("");
-  const [image, setImage] = useState(""); // Image field
-  const [address, setAddress] = useState(""); // Added address field
+  const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState(null); // New state for image file
+  const [uploading, setUploading] = useState(false); // New state for upload status
+  const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [darkMode, setDarkMode] = useState(true); // State for dark mode
-
-  // New state variables for OTP
+  const [darkMode, setDarkMode] = useState(true);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -24,22 +24,62 @@ const Signup = () => {
 
   useEffect(() => {
     let messageTimeout;
-
     if (error || success) {
       messageTimeout = setTimeout(() => {
         setError(null);
         setSuccess(null);
       }, 3000);
     }
-
     return () => clearTimeout(messageTimeout);
   }, [error, success]);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      // Create a preview URL for the selected image
+      const previewUrl = URL.createObjectURL(file);
+      setImage(previewUrl);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!imageFile) return null;
+
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      setUploading(true);
+      const response = await fetch('https://retail-connect-backend.onrender.com/api/upload/image', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setImage(data.url);
+        return data.url;
+      } else {
+        setError(data.error || 'Failed to upload image');
+        return null;
+      }
+    } catch (error) {
+      setError('An error occurred while uploading the image');
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Keep existing OTP handling functions
   const handleSendOTP = async () => {
     try {
       const response = await fetch('https://retail-connect-backend.onrender.com/api/otp/send-otp', {
         method: 'POST',
-        credentials:"include",
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -66,7 +106,7 @@ const Signup = () => {
     try {
       const response = await fetch("https://retail-connect-backend.onrender.com/api/otp/verify-otp", {
         method: "POST",
-        credentials:"include",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -86,7 +126,6 @@ const Signup = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -97,6 +136,12 @@ const Signup = () => {
       return;
     }
 
+    let imageUrl = image;
+    if (imageFile) {
+      imageUrl = await uploadImage();
+      if (!imageUrl) return; // Stop if image upload failed
+    }
+
     const formData = {
       name,
       email,
@@ -105,14 +150,14 @@ const Signup = () => {
       role,
       companyName: role === "distributor" ? companyName : undefined,
       shopName: role === "retailer" ? shopName : undefined,
-      image,
+      image: imageUrl,
       address,
     };
 
     try {
       const response = await fetch("https://retail-connect-backend.onrender.com/api/auth/register", {
         method: "POST",
-        credentials:"include",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -123,7 +168,6 @@ const Signup = () => {
 
       if (response.ok) {
         setSuccess(data.message);
-        // Optionally, redirect to login or dashboard
       } else {
         setError(data.error);
       }
@@ -131,7 +175,6 @@ const Signup = () => {
       setError("An error occurred while signing up.");
     }
   };
-
   return (
     <div
       className={`flex flex-col justify-center items-center w-full h-screen ${
@@ -291,20 +334,37 @@ const Signup = () => {
                 required
               />
             </div>
-            <div className="relative">
-              <User className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-500" />
-              <input
-                className={`w-full px-10 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-one focus:border-2 ${
-                  darkMode
-                    ? "focus:border-white bg-gray-700 text-white"
-                    : "focus:border-black bg-gray-100 text-black"
-                }`}
-                type="text"
-                placeholder="Paste your image URL"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                required
-              />
+            <div className="space-y-4">
+              <div className="relative">
+                <Upload className="absolute top-1/2 -translate-y-1/2 left-3 text-gray-500" />
+                <input
+                  className={`w-full px-10 py-3 rounded-lg font-medium border-2 border-transparent placeholder-gray-500 text-sm focus:outline-none focus:border-2 ${
+                    darkMode
+                      ? "focus:border-white bg-gray-700 text-white"
+                      : "focus:border-black bg-gray-100 text-black"
+                  }`}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required
+                />
+                {uploading && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="animate-spin" />
+                  </div>
+                )}
+              </div>
+              
+              {/* Image preview */}
+              {image && (
+                <div className="relative w-full h-40 rounded-lg overflow-hidden">
+                  <img
+                    src={image}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">

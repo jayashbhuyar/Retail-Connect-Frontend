@@ -181,10 +181,10 @@ const ProductListAll = () => {
                 </h3>
                 <p className="text-gray-400">Type: {product.productType}</p>
                 <p className="text-gray-400">
-                  Price: ₹ {product.price.toFixed(2)}
-                </p>
-                <p className="text-gray-400 mb-4">
                   Quantity: {product.quantity}
+                </p>
+                <p className="text-gray-400">
+                  Price: ₹ {product.price.toFixed(2)}
                 </p>
                 <div className="mt-auto flex space-x-2">
                   <button
