@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Import the js-cookie library
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,51 +8,49 @@ const Login = () => {
   const [role, setRole] = useState("retailer"); // Default role
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
 
-  
+  const navigate = useNavigate(); // Initialize useNavigate
+
   useEffect(() => {
-    
-      const validateToken = async () => {
-        try {
-          const response = await fetch("https://retail-connect-backend.onrender.com/api/validate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body:"asdjfsajdlgkjaslkg",
-            credentials: "include",
-          });
-          console.log(response)
+    const validateToken = async () => {
+      try {
+        const response = await fetch("https://retail-connect-backend.onrender.com/api/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (response.ok) {
           const data = await response.json();
-
-          if (response.ok) {
-            // Token is valid, redirect based on user role
-            console.log(JSON.parse(localStorage.getItem('userdata')))
-            if (JSON.parse(localStorage.getItem('userdata')).role === "distributor") {
-              window.location.href = "/homepage"; // Redirect to distributor dashboard
-            } else if (JSON.parse(localStorage.getItem('userdata')).role === "retailer") {
-              window.location.href = "/homepageretailer"; // Redirect to retailer dashboard
-            } else if (JSON.parse(localStorage.getItem('userdata')).role === "admin") {
-              window.location.href = "/adminhome"; // Redirect to admin dashboard
+          const userData = JSON.parse(localStorage.getItem('userdata'));
+          if (userData) {
+            if (userData.role === "distributor") {
+              navigate("/homepage");
+            } else if (userData.role === "retailer") {
+              navigate("/homepageretailer");
+            } else if (userData.role === "admin") {
+              navigate("/adminhome");
             }
-          } else {
-            Cookies.remove("token");
-
-            // If token is invalid, remove it
           }
-        } catch (error) {
-          console.error("Token validation failed:", error);
+        } else {
+          Cookies.remove("token");
         }
-      };
+      } catch (error) {
+        console.error("Token validation failed:", error);
+      }
+    };
 
-      validateToken();
-    
-  }, []); // Empty dependency array means this runs only once after the component mounts
+    validateToken();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setLoading(true); // Start loading
 
     const loginData = { email, password, role };
 
@@ -63,55 +61,48 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
-        credentials: "include", // This ensures cookies are included with requests
+        credentials: "include",
       });
 
       const data = await response.json();
-      console.log(data)
 
       if (response.ok) {
         setSuccess(data.message);
-
-        // Set the token as a cookie
-        Cookies.set("token", data.token, {
-          expires: 30,
-          // secure: true,
-          sameSite: "strict",
-        });
+        setEmail(""); // Clear email
+        setPassword(""); // Clear password
+        Cookies.set("token", data.token, { expires: 30, sameSite: "strict" });
         localStorage.setItem('userdata', JSON.stringify(data.user));
-        // 1-hour expiry, sent over HTTPS, and protects against CSRF attacks.
 
         // Redirect based on user role
         if (data.user.role === "distributor") {
-          window.location.href = "/homepage"; // Redirect to distributor dashboard
+          navigate("/homepage");
         } else if (data.user.role === "retailer") {
-          window.location.href = "/homepageretailer"; // Redirect to retailer dashboard
+          navigate("/homepageretailer");
         } else if (data.user.role === "admin") {
-          window.location.href = "/adminhome"; // Redirect to admin dashboard
+          navigate("/adminhome");
         }
       } else {
         setError(data.message);
       }
     } catch (error) {
       setError("An error occurred while logging in.");
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   return (
     <div className="bg-sky-100 flex justify-center items-center h-screen">
-      {/* Left: Image */}
       <div className="w-1/2 h-screen hidden lg:block">
         <img
           src="https://img.freepik.com/fotos-premium/imagen-fondo_910766-187.jpg?w=826"
-          alt="Placeholder Image"
+          alt="Placeholder"
           className="object-cover w-full h-full"
         />
       </div>
-      {/* Right: Login Form */}
       <div className="lg:p-36 md:p-52 sm:p-20 p-8 w-full lg:w-1/2">
         <h1 className="text-2xl font-semibold mb-4">Login</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email Input */}
           <div className="mb-4">
             <label className="block text-gray-600">Email:</label>
             <input
@@ -124,7 +115,6 @@ const Login = () => {
               autoComplete="off"
             />
           </div>
-          {/* Password Input */}
           <div className="mb-4">
             <label className="block text-gray-800">Password:</label>
             <input
@@ -137,7 +127,6 @@ const Login = () => {
               autoComplete="off"
             />
           </div>
-          {/* Role Selection */}
           <div className="mb-4">
             <label className="block text-gray-700">Role:</label>
             <select
@@ -150,12 +139,12 @@ const Login = () => {
               <option value="admin">Admin</option>
             </select>
           </div>
-          {/* Login Button */}
           <button
             type="submit"
             className="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
