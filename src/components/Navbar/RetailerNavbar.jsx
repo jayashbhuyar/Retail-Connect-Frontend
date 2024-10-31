@@ -35,7 +35,7 @@ const RetailerNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8000/api/auth/logout", {
+      await fetch("https://retail-connect-backend.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });
