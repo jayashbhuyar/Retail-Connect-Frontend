@@ -37,7 +37,7 @@ const DistributorsNavbar = () => {
   const handleLogout = async () => {
     try {
       // Optionally, notify the server to invalidate the token (if token invalidation is needed)
-      await fetch("https://retail-connect-backend.onrender.com/api/auth/logout", {
+      await fetch("http://localhost:8000/api/auth/logout", {
         method: "POST",
         credentials: "include", // Include credentials (cookies) in the request
       });
@@ -63,8 +63,8 @@ const DistributorsNavbar = () => {
           <div className="flex-shrink-0">
             <Link to="/homepage">
               <img
-                className="h-8 w-auto md:h-14"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1k4OmmdnQ9swvTRpaJML0CkWzJrg7XMO_JsqTl9xlCDzgftvgyiFeHPn56qZhxzzInA&usqp=CAU"
+                className="h-8 w-auto md:h-14 rounded-lg"
+                src="https://res.cloudinary.com/dlx3l4a9p/image/upload/v1730382942/wjyihm0hyh0ctnkow2m0.png"
                 alt="Your Company"
               />
             </Link>
